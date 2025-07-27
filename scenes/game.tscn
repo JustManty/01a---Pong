@@ -1,43 +1,87 @@
-[gd_scene load_steps=7 format=3 uid="uid://b3v20crg5g3qu"]
+[gd_scene load_steps=8 format=3 uid="uid://b3v20crg5g3qu"]
 
 [ext_resource type="Script" uid="uid://bf3yssdlewtu" path="res://scenes/game.gd" id="1_lnu2h"]
 [ext_resource type="PackedScene" uid="uid://cje70pm5qxu53" path="res://ball/ball.tscn" id="1_uwrxv"]
+[ext_resource type="Script" uid="uid://c2ejbxsygmq8q" path="res://scenes/pause_menu.gd" id="2_iywne"]
 [ext_resource type="PackedScene" uid="uid://bjbui5q6s0nso" path="res://paddle/paddle.tscn" id="2_yqjtg"]
 [ext_resource type="FontFile" uid="uid://f5ubb0rbwx0y" path="res://fonts/PressStart2P-Regular.ttf" id="4_lbhrr"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_yqjtg"]
-size = Vector2(20, 370)
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_lbhrr"]
+normal = Vector2(1, 0)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_lnu2h"]
-size = Vector2(24, 374)
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_iywne"]
+normal = Vector2(-1, 0)
 
-[node name="Game" type="Node2D"]
+[node name="Controller" type="Node2D"]
 script = ExtResource("1_lnu2h")
 
-[node name="Ball" parent="." instance=ExtResource("1_uwrxv")]
+[node name="Pause Menu" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("2_iywne")
+
+[node name="Resume" type="RichTextLabel" parent="Pause Menu"]
+layout_mode = 0
+offset_left = 256.0
+offset_top = 96.0
+offset_right = 384.0
+offset_bottom = 119.0
+theme_override_fonts/normal_font = ExtResource("4_lbhrr")
+text = "RESUME"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Restart" type="RichTextLabel" parent="Pause Menu"]
+layout_mode = 0
+offset_left = 256.0
+offset_top = 143.0
+offset_right = 384.0
+offset_bottom = 166.0
+theme_override_fonts/normal_font = ExtResource("4_lbhrr")
+text = "RESTART"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Exit" type="RichTextLabel" parent="Pause Menu"]
+layout_mode = 0
+offset_left = 256.0
+offset_top = 189.0
+offset_right = 384.0
+offset_bottom = 212.0
+theme_override_fonts/normal_font = ExtResource("4_lbhrr")
+text = "EXIT"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Game" type="Node2D" parent="."]
+visible = false
+
+[node name="Ball" parent="Game" instance=ExtResource("1_uwrxv")]
 position = Vector2(320, 180)
 speed = 250.0
 
-[node name="P1 Paddle" parent="." instance=ExtResource("2_yqjtg")]
+[node name="P1 Paddle" parent="Game" instance=ExtResource("2_yqjtg")]
 position = Vector2(40, 180)
 
-[node name="P2 Paddle" parent="." instance=ExtResource("2_yqjtg")]
+[node name="P2 Paddle" parent="Game" instance=ExtResource("2_yqjtg")]
 position = Vector2(600, 180)
 player_slot = 1
 
-[node name="Left Goal" type="Area2D" parent="."]
+[node name="Left Goal" type="Area2D" parent="Game"]
 position = Vector2(0, 180)
+monitorable = false
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Left Goal"]
-shape = SubResource("RectangleShape2D_yqjtg")
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Game/Left Goal"]
+shape = SubResource("WorldBoundaryShape2D_lbhrr")
 
-[node name="Right Goal" type="Area2D" parent="."]
+[node name="Right Goal" type="Area2D" parent="Game"]
 position = Vector2(640, 180)
+monitorable = false
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Right Goal"]
-shape = SubResource("RectangleShape2D_lnu2h")
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Game/Right Goal"]
+shape = SubResource("WorldBoundaryShape2D_iywne")
 
-[node name="Left Score" type="Label" parent="."]
+[node name="Left Score" type="Label" parent="Game"]
 offset_right = 107.0
 offset_bottom = 23.0
 scale = Vector2(3, 3)
@@ -46,7 +90,7 @@ text = "0"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Right Score" type="Label" parent="."]
+[node name="Right Score" type="Label" parent="Game"]
 offset_left = 321.0
 offset_right = 427.0
 offset_bottom = 23.0
@@ -56,4 +100,5 @@ text = "0"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[connection signal="body_entered" from="Left Goal" to="Ball" method="_on_left_goal_body_entered"]
+[connection signal="body_entered" from="Game/Left Goal" to="." method="_on_left_goal_body_entered"]
+[connection signal="body_entered" from="Game/Right Goal" to="." method="_on_right_goal_body_entered"]

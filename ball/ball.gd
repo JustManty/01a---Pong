@@ -22,7 +22,7 @@ func _physics_process( delta: float ) -> void:
 
 func _ready() -> void:
 	start_position = self.position
-	velocity = get_random_velocity()
+	set_random_velocity()
 	move_and_slide()
 
 func is_colliding_vertical_bound() -> bool:
@@ -33,11 +33,11 @@ func is_colliding_vertical_bound() -> bool:
 func start_game() -> void:
 	game_is_started = true
 	
-func get_random_velocity() -> Vector2:
+func set_random_velocity() -> void:
 	var random_start_velocity = Vector2.ZERO
 	random_start_velocity.x = randi_range( -3, 3 )
 	random_start_velocity.y = randi_range( -3, 3 )
 	# Don't allow for zero horizontal velocity
 	if random_start_velocity.x == 0: random_start_velocity.x = 1
 	random_start_velocity = random_start_velocity.normalized()
-	return random_start_velocity * speed
+	velocity = random_start_velocity * speed
