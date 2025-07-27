@@ -12,19 +12,17 @@ var score: Array[int] = [0,0]
 
 func _ready() -> void:
 	Engine.time_scale = 0
-	pass
 
 func _process( delta: float ) -> void:
-	if( !game_started && Input.is_anything_pressed() ):
+	if !game_started and Input.is_anything_pressed():
 		start_game()
+	
+	if Input.is_action_just_pressed("menu"):
+		handle_pause_menu()
 
 func start_game() -> void:
-	Engine.time_scale = 1
+	GameController.resume()
 	game_started = true
-
-func pause_game() -> void:
-	Engine.time_scale = 0
-	game_started = false
 
 func reset_game_positions() -> void:
 	ball.position = ball.start_position
@@ -36,34 +34,44 @@ func update_scoreboard() -> void:
 	right_score.text = str( score[1] )
 
 func _on_left_goal_body_entered(body: Node2D) -> void:
-	pause_game()
+	GameController.pause()
 	reset_game_positions()
 	ball.set_random_velocity()
 	score[1] += 1
 	update_scoreboard()
 
 func _on_right_goal_body_entered(body: Node2D) -> void:
-	pause_game()
+	GameController.pause()
 	reset_game_positions()
 	ball.set_random_velocity()
 	score[0] += 1
 	update_scoreboard()
 	
 func handle_pause_menu() -> void:
-	pause_game()
+	if GameController.is_paused:
+		GameController.resume()
+		hide_pause_menu()
+	else:
+		GameController.pause()
+		display_pause_menu()
 
 func display_pause_menu() -> void:
 	var game = $Game
 	var pause_menu = $"Pause Menu"
-	for child:CanvasItem in game.get_children():
-		child.hide()
-	for child:CanvasItem in pause_menu.get_children():
-		child.show()
+	game.hide()
+	pause_menu.show()
 
 func hide_pause_menu() -> void:
 	var game = $Game
 	var pause_menu = $"Pause Menu"
-	for child:CanvasItem in game.get_children():
-		child.show()
-	for child:CanvasItem in pause_menu.get_children():
-		child.hide()
+	game.show()
+	pause_menu.hide()
+
+
+func _on_pause_menu_resume_selected() -> void:
+	hide_pause_menu()
+	GameController.resume()
+	
+func reset_score() -> void:
+	score = [0, 0]
+	update_scoreboard()

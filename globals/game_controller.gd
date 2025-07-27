@@ -1,26 +1,11 @@
 extends Node2D
 
-@onready var left_score: Label = $"Left Score"
-@onready var right_score: Label = $"Right Score"
-@onready var left_goal: Area2D = $"Left Goal"
-@onready var right_goal: Area2D = $"Right Goal"
-
-var game_started: bool = false
-var score: Array[int] = [0,0]
-signal start_game()
-
-func _ready() -> void:
-	left_goal.body_entered.connect(add_left_score)
-	right_goal.body_entered.connect(add_right_score)
-	pass
+var is_paused: bool = false
 	
-func _process( delta: float ) -> void:
-	if( !game_started && Input.is_anything_pressed() ):
-		start_game.emit()
+func pause() -> void:
+	Engine.time_scale = 0
+	is_paused = true
 
-func add_left_score() -> void:
-	left_score.text = str( int( left_score.text ) + 1 )
-
-func add_right_score() -> void:
-	right_score.text = str( int (right_score.text ) + 1 )
-	
+func resume() -> void:
+	Engine.time_scale = 1
+	is_paused = false

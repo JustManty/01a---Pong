@@ -1,10 +1,11 @@
-[gd_scene load_steps=8 format=3 uid="uid://b3v20crg5g3qu"]
+[gd_scene load_steps=9 format=3 uid="uid://b3v20crg5g3qu"]
 
 [ext_resource type="Script" uid="uid://bf3yssdlewtu" path="res://scenes/game.gd" id="1_lnu2h"]
 [ext_resource type="PackedScene" uid="uid://cje70pm5qxu53" path="res://ball/ball.tscn" id="1_uwrxv"]
 [ext_resource type="Script" uid="uid://c2ejbxsygmq8q" path="res://scenes/pause_menu.gd" id="2_iywne"]
 [ext_resource type="PackedScene" uid="uid://bjbui5q6s0nso" path="res://paddle/paddle.tscn" id="2_yqjtg"]
 [ext_resource type="FontFile" uid="uid://f5ubb0rbwx0y" path="res://fonts/PressStart2P-Regular.ttf" id="4_lbhrr"]
+[ext_resource type="Script" uid="uid://m2e6rkyky4uc" path="res://paddle/ai_paddle.gd" id="6_p57ef"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_lbhrr"]
 normal = Vector2(1, 0)
@@ -16,6 +17,7 @@ normal = Vector2(-1, 0)
 script = ExtResource("1_lnu2h")
 
 [node name="Pause Menu" type="Control" parent="."]
+visible = false
 layout_mode = 3
 anchors_preset = 0
 script = ExtResource("2_iywne")
@@ -31,6 +33,13 @@ text = "RESUME"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="ColorRect" type="ColorRect" parent="Pause Menu/Resume"]
+z_index = -1
+layout_mode = 0
+offset_right = 128.0
+offset_bottom = 40.0
+color = Color(0, 0, 0.552941, 1)
+
 [node name="Restart" type="RichTextLabel" parent="Pause Menu"]
 layout_mode = 0
 offset_left = 256.0
@@ -41,6 +50,13 @@ theme_override_fonts/normal_font = ExtResource("4_lbhrr")
 text = "RESTART"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="ColorRect" type="ColorRect" parent="Pause Menu/Restart"]
+z_index = -1
+layout_mode = 0
+offset_right = 128.0
+offset_bottom = 40.0
+color = Color(1, 1, 1, 0)
 
 [node name="Exit" type="RichTextLabel" parent="Pause Menu"]
 layout_mode = 0
@@ -53,8 +69,14 @@ text = "EXIT"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="ColorRect" type="ColorRect" parent="Pause Menu/Exit"]
+z_index = -1
+layout_mode = 0
+offset_right = 128.0
+offset_bottom = 40.0
+color = Color(1, 1, 1, 0)
+
 [node name="Game" type="Node2D" parent="."]
-visible = false
 
 [node name="Ball" parent="Game" instance=ExtResource("1_uwrxv")]
 position = Vector2(320, 180)
@@ -65,7 +87,7 @@ position = Vector2(40, 180)
 
 [node name="P2 Paddle" parent="Game" instance=ExtResource("2_yqjtg")]
 position = Vector2(600, 180)
-player_slot = 1
+script = ExtResource("6_p57ef")
 
 [node name="Left Goal" type="Area2D" parent="Game"]
 position = Vector2(0, 180)
@@ -100,5 +122,6 @@ text = "0"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[connection signal="resume_selected" from="Pause Menu" to="." method="_on_pause_menu_resume_selected"]
 [connection signal="body_entered" from="Game/Left Goal" to="." method="_on_left_goal_body_entered"]
 [connection signal="body_entered" from="Game/Right Goal" to="." method="_on_right_goal_body_entered"]

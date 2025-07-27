@@ -9,14 +9,12 @@ enum player { LEFT, RIGHT }
 var game_is_started: bool = false
 var starting_positition: Vector2
 
-func _process(delta: float) -> void:
-	pass
-
 func _physics_process(delta: float) -> void:
-	if( Input.is_action_pressed( "P" + get_player_number_as_string() + " Up" ) && !is_colliding_top()):
-		self.position.y -= speed * delta
-	elif( Input.is_action_pressed( "P" + get_player_number_as_string() + " Down" ) && !is_colliding_bottom()):
-		self.position.y += speed * delta
+	if !GameController.is_paused:
+		if Input.is_action_pressed( "P" + get_player_number_as_string() + " Up" ) and !is_colliding_top():
+			self.position.y -= speed * delta
+		elif Input.is_action_pressed( "P" + get_player_number_as_string() + " Down" ) and !is_colliding_bottom():
+			self.position.y += speed * delta
 
 func _ready() -> void:
 	starting_positition = self.position
@@ -32,6 +30,11 @@ func reset_horizontal_pos() -> void:
 	self.position.x = starting_positition.x
 	
 func get_player_number_as_string() -> String:
-	if( player_slot == player.LEFT ): return "1"
-	if( player_slot == player.RIGHT ): return "2"
-	return "null"
+	match player_slot:
+		player.LEFT:
+			return "1"
+		player.RIGHT:
+			return "2"
+		_:
+			push_error("player_slot was NULL in get_player_number_as_string()!")
+			return "null"

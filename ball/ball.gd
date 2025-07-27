@@ -7,18 +7,19 @@ var game_is_started : bool = false
 var start_position : Vector2
 
 func _physics_process( delta: float ) -> void:	
-	# Handle vertical boundaries
-	if(is_colliding_vertical_bound()):
-		velocity.y *= -1
+	if !GameController.is_paused:
+		# Handle vertical boundaries
+		if(is_colliding_vertical_bound()):
+			velocity.y *= -1
 		
-	# Handle paddle collisions 
-	for i in range(get_slide_collision_count()):
-		var collision = get_slide_collision(i)
-		var paddle = collision.get_collider() as Paddle
-		velocity = velocity.bounce(collision.get_normal())
-		break
-	
-	move_and_slide()
+		# Handle paddle collisions 
+		for i in range(get_slide_collision_count()):
+			var collision = get_slide_collision(i)
+			var paddle = collision.get_collider() as Paddle
+			velocity = velocity.bounce(collision.get_normal())
+			break
+		
+		move_and_slide()
 
 func _ready() -> void:
 	start_position = self.position
