@@ -19,7 +19,6 @@ func _physics_process(delta: float) -> void:
 		self.position.y += speed * delta
 
 func _ready() -> void:
-	GameController.start_game.connect( start_game )
 	starting_positition = self.position
 	pass
 
@@ -28,9 +27,6 @@ func is_colliding_top() -> bool:
 
 func is_colliding_bottom() -> bool:
 	return ( get_viewport_rect().end.y - ( sprite.texture.get_height() * sprite.scale.y / 2 ) ) < self.position.y
-	
-func start_game() -> void:
-	game_is_started = true
 
 func reset_horizontal_pos() -> void:
 	self.position.x = starting_positition.x

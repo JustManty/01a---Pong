@@ -2,32 +2,26 @@ class_name Ball extends CharacterBody2D
 
 @export var speed : float = 100.0
 @onready var sprite: Sprite2D = $Sprite2D
-@onready var p1_paddle: Paddle = $"../P1 Paddle"
-@onready var p2_paddle: Paddle = $"../P2 Paddle"
-@onready var left_goal: Area2D = $"../Left Goal"
-@onready var right_goal: Area2D = $"../Right Goal"
 
 var game_is_started : bool = false
+var start_position : Vector2
 
-func _process( delta: float ) -> void:
-	if( !game_is_started ): return
-
-func _physics_process( delta: float ) -> void:
-	if( !game_is_started ): return
-	
-	# Handle collisions
-	if(is_colliding_vertical_bound()): velocity.y *= -1
+func _physics_process( delta: float ) -> void:	
+	# Handle vertical boundaries
+	if(is_colliding_vertical_bound()):
+		velocity.y *= -1
+		
+	# Handle paddle collisions 
 	for i in range(get_slide_collision_count()):
 		var collision = get_slide_collision(i)
+		var paddle = collision.get_collider() as Paddle
 		velocity = velocity.bounce(collision.get_normal())
 		break
 	
 	move_and_slide()
 
 func _ready() -> void:
-	GameController.start_game.connect( start_game )
-	left_goal.body_entered.connect( left_score )
-	right_goal.body_entered.connect( right_score )
+	start_position = self.position
 	velocity = get_random_velocity()
 	move_and_slide()
 
@@ -47,14 +41,3 @@ func get_random_velocity() -> Vector2:
 	if random_start_velocity.x == 0: random_start_velocity.x = 1
 	random_start_velocity = random_start_velocity.normalized()
 	return random_start_velocity * speed
-	
-func score( left_score_to_add: int, right_score_to_add: int ) -> void:
-	game_is_started = false
-	GameController.add_score( left_score_to_add, right_score_to_add )
-	position = Vector2( get_viewport_rect().end / 2 )
-	
-func left_score() -> void:
-	score( 1, 0 )
-	
-func right_score() -> void:
-	score( 0, 1 )
