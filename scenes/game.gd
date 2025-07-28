@@ -3,8 +3,8 @@ class_name Game extends Node2D
 @onready var left_score: Label = $"Game/Left Score"
 @onready var right_score: Label = $"Game/Right Score"
 @onready var ball: Ball = $"Game/Ball"
-@onready var p1_paddle: Paddle = $"Game/P1 Paddle"
-@onready var p2_paddle: Paddle = $"Game/P2 Paddle"
+@onready var p1_paddle: PlayerPaddle = $"Game/P1 Paddle"
+@onready var p2_paddle: AIPaddle = $"Game/P2 Paddle"
 
 
 var game_started: bool = false

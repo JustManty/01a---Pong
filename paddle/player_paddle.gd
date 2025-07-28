@@ -1,4 +1,4 @@
-class_name Paddle extends StaticBody2D
+class_name PlayerPaddle extends StaticBody2D
 
 enum player { LEFT, RIGHT }
 

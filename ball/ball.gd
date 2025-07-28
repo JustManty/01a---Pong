@@ -2,6 +2,7 @@ class_name Ball extends CharacterBody2D
 
 @export var speed : float = 100.0
 @onready var sprite: Sprite2D = $Sprite2D
+@onready var audio_stream_player: AudioStreamPlayer2D = $AudioStreamPlayer2D
 
 var game_is_started : bool = false
 var start_position : Vector2
@@ -15,8 +16,10 @@ func _physics_process( delta: float ) -> void:
 		# Handle paddle collisions 
 		for i in range(get_slide_collision_count()):
 			var collision = get_slide_collision(i)
-			var paddle = collision.get_collider() as Paddle
 			velocity = velocity.bounce(collision.get_normal())
+			if collision.get_collider() is AIPaddle or collision.get_collider() is PlayerPaddle:
+				audio_stream_player.play()
+				velocity *= 1.05
 			break
 		
 		move_and_slide()

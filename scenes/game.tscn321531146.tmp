@@ -1,11 +1,10 @@
-[gd_scene load_steps=9 format=3 uid="uid://b3v20crg5g3qu"]
+[gd_scene load_steps=8 format=3 uid="uid://b3v20crg5g3qu"]
 
 [ext_resource type="Script" uid="uid://bf3yssdlewtu" path="res://scenes/game.gd" id="1_lnu2h"]
 [ext_resource type="PackedScene" uid="uid://cje70pm5qxu53" path="res://ball/ball.tscn" id="1_uwrxv"]
 [ext_resource type="Script" uid="uid://c2ejbxsygmq8q" path="res://scenes/pause_menu.gd" id="2_iywne"]
 [ext_resource type="PackedScene" uid="uid://bjbui5q6s0nso" path="res://paddle/paddle.tscn" id="2_yqjtg"]
 [ext_resource type="FontFile" uid="uid://f5ubb0rbwx0y" path="res://fonts/PressStart2P-Regular.ttf" id="4_lbhrr"]
-[ext_resource type="Script" uid="uid://b252q3mvparc3" path="res://paddle/player_paddle.gd" id="6_p57ef"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_lbhrr"]
 normal = Vector2(1, 0)
@@ -84,8 +83,6 @@ speed = 250.0
 
 [node name="P1 Paddle" parent="Game" instance=ExtResource("2_yqjtg")]
 position = Vector2(40, 180)
-script = ExtResource("6_p57ef")
-player_slot = 0
 
 [node name="P2 Paddle" parent="Game" instance=ExtResource("2_yqjtg")]
 position = Vector2(600, 180)
